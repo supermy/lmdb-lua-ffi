@@ -1,8 +1,8 @@
-local _ = require 'underscore'
+local _ = require 'src/underscore'
 local bit = require 'bit'
-local dump = require 'utils'.dump
+local dump = require 'src/utils'.dump
 local ffi = require 'ffi'
-local lmdb = require 'lmdb_ffi'
+local lmdb = require 'src/lmdb_ffi'
 
 _M = {}
 _M._VERSION = '0.1-alpha'

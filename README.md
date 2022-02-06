@@ -7,6 +7,19 @@ LuaJIT FFI based bindings for lmdb (http://symas.com/mdb/). This library is work
 
 So far the environment and transaction implementation in almost complete. The cursors are WIP.
 
+luarocks --lua-dir=/usr/local/opt/lua@5.1 install busted
+luarocks --lua-dir=/usr/local/opt/lua@5.1 install luafilesystem
+luarocks --lua-dir=/usr/local/opt/lua@5.1 install lua_cliargs
+luarocks --lua-dir=/usr/local/opt/lua@5.1 install penlight
+luarocks --lua-dir=/usr/local/opt/lua@5.1 install lua-term
+luarocks --lua-dir=/usr/local/opt/lua@5.1 install luasystem
+luarocks --lua-dir=/usr/local/opt/lua@5.1 install mediator_lua
+luarocks --lua-dir=/usr/local/opt/lua@5.1 install lua_cliargs
+luarocks --lua-dir=/usr/local/opt/lua@5.1 install luassert
+luarocks --lua-dir=/usr/local/opt/lua@5.1 install say
+busted -v
+busted -o TAP
+废弃 busted； 改用 luaunit
 
 Copyright and License
 =====================
