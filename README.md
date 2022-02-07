@@ -23,6 +23,22 @@ busted -o TAP
 TODO
 废弃 busted； 改用 luaunit
 
+underscore提供集合数组func Object 的常用函数； 建議使用Lo-Dash，性能優異很多的實現。
+Underscore.funcs.for_each = Underscore.funcs.each
+Underscore.funcs.collect = Underscore.funcs.map
+Underscore.funcs.inject = Underscore.funcs.reduce
+Underscore.funcs.foldl = Underscore.funcs.reduce
+Underscore.funcs.filter = Underscore.funcs.select
+Underscore.funcs.every = Underscore.funcs.all
+Underscore.funcs.some = Underscore.funcs.any
+Underscore.funcs.head = Underscore.funcs.first
+Underscore.funcs.tail = Underscore.funcs.rest
+Underscore.lua, 一个Lua版本的Underscore, 函数都通用. 包含面向对象封装和链式语法. (源码)
+_ = require 'underscore' 是一个提供一组实用程序的Lua库   用于处理迭代器，数组，表和函数的函数。   这是api和文档受Underscore.lua的启发。   在Lua中使用下划线字符来丢弃变量是惯用的，所以你可以简单地将它分配给另一个变量名
+
+
+
+
 Copyright and License
 =====================
 
