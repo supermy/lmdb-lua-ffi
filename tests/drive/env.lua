@@ -70,13 +70,12 @@ local function pref(fn)
     -- return r
 end
 
-local os = require "os"
-local lmdb = require "src/lmdb"
-local utils = require "src/utils"
+local os = require 'os'
+local lmdb = require 'src/lmdb'
+local utils = require 'src/utils'
 local dump = utils.dump
-local testdb = "./db/test-10k"
+local testdb = './db/test'
 local env, msg = nil
-local intdb = nil
 
 --以下按照table分类测试用例（分组TestRoaring）
 TestLMDBIntKeys = {} --class
@@ -84,136 +83,69 @@ TestLMDBIntKeys = {} --class
 function TestLMDBIntKeys:setUp()
     print("\n", string.rep("-", 100), "set up")
 
-    env, msg = lmdb.environment(testdb, {subdir = false, max_dbs = 8})
-    intdb = env:db_open("int_db", {integer_keys = true})
-    env:transaction(
-        function(txn)
-            for i = 1, 100 do
-                txn:put(101 - i, 101 - i)
-            end
-        end,
-        lmdb.WRITE,
-        intdb
-    )
+    env, msg = lmdb.environment(testdb, {subdir = false, max_dbs=8})
+
 end
 
 function TestLMDBIntKeys:tearDown()
     print("\n", string.rep("-", 100), "tear down")
 
-    env = nil
-    msg = nil
+    if env then
+        env = nil
+        msg = nil
+    end
     collectgarbage()
     os.remove(testdb)
-    os.remove(testdb .. "-lock")
+    os.remove(testdb .. '-lock')
 end
 
-function TestLMDBIntKeys:test1_checks_cursor_simple_iteration()
+function TestLMDBIntKeys:test1_checks_for_environment_clean_open()
     pref(
         function()
-            env:transaction(
-                function(txn)
-                    local i, c = 1, txn:cursor()
-                    for k, v in c:iter() do
-                        lu.assertEquals(k, tonumber(tostring(v)))
-                        lu.assertEquals(k, i)
-                        i = i + 1
-                    end
-                end,
-                lmdb.READ_ONLY,
-                intdb
-            )
+        lu.assertNil(msg)
+        lu.assertNotNil(env)
+        lu.assertNotNil(env['dbs'][1])
+        lu.assertEquals(testdb, env:path())
         end
     )
 end
 
-function TestLMDBIntKeys:test2_checks_cursor_reverse_iteration()
+function TestLMDBIntKeys:test2_check_for_read_transaction()
     pref(
         function()
-            env:transaction(
-                function(txn)
-                    local i, c = 100, txn:cursor()
-                    for k, v in c:iter({reverse = true}) do
-                        lu.assertEquals(k, tonumber(tostring(v)))
-                        lu.assertEquals(k, i)
-                        i = i - 1
-                    end
-                end,
-                lmdb.READ_ONLY,
-                intdb
-            )
+                local result, msg = env:transaction(function(txn)
+                    lu.assertNotNil(txn)
+                    lu.assertTrue(txn.read_only)
+                end, lmdb.READ_ONLY)
+                lu.assertNotNil(result)
+                lu.assertNil(msg)
         end
     )
 end
-function TestLMDBIntKeys:test3_checks_cursor_seek()
+function TestLMDBIntKeys:test3_check_database_open()
     pref(
         function()
-            env:transaction(
-                function(txn)
-                    local i, c = 50, txn:cursor()
-                    lu.assertEquals(50, tonumber(tostring(c:seek(50))))
-                    i = 50
-                    for k, v in c:iter() do
-                        lu.assertEquals(k, tonumber(tostring(v)))
-                        lu.assertEquals(k, i)
-                        i = i + 1
-                    end
-                end,
-                lmdb.READ_ONLY,
-                intdb
-            )
+                local test_db, msg = env:db_open('calin')
+                lu.assertNil(msg)
+                lu.assertNotNil(test_db)
         end
     )
 end
-function TestLMDBIntKeys:test4_checks_cursor_seek_not_found()
+function TestLMDBIntKeys:test4_check_read_after_commited_write()
     pref(
         function()
-            env:transaction(
-                function(txn)
-                    local c = txn:cursor()
-                    lu.assertNil(c:seek(101))
-                end,
-                lmdb.READ_ONLY,
-                intdb
-            )
+                local t = os.time()
+                env:transaction(function(txn)
+                    txn:put('test-key',t)
+                end, lmdb.WRITE)
+                local got_t = nil
+                env:transaction(function(txn)
+                    got_t = txn:get('test-key')
+                end, lmdb.READ_ONLY)
+                lu.assertEquals(t, tonumber(tostring(got_t)))
         end
     )
 end
-function TestLMDBIntKeys:test6_checks_cursor_iteration_after_seek_not_found()
-    pref(
-        function()
-            env:transaction(
-                function(txn)
-                    local i, c = 1, txn:cursor()
-                    lu.assertNil(c:seek(0))
-                    for k, v in c:iter() do
-                        lu.assertEquals(k, tonumber(tostring(v)))
-                        lu.assertEquals(k, i)
-                        i = i + 1
-                    end
-                end,
-                lmdb.READ_ONLY,
-                intdb
-            )
-        end
-    )
-end
-
-function TestLMDBIntKeys:test7_checks_cursor_seek_first_found()
-    pref(
-        function()
-            env:transaction(
-                function(txn)
-                    local c = txn:cursor()
-                    local k, v = c:seek(0, true)
-                    lu.assertEquals(1, k)
-                end,
-                lmdb.READ_ONLY,
-                intdb
-            )
-        end
-    )
-end
--- class TestLMDBCursors
 
 -- simple test functions that were written previously can be integrated
 -- in luaunit too

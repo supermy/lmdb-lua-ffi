@@ -20,5 +20,11 @@ deps-install:
 	luarocks --lua-dir=/usr/local/opt/lua@5.1 install concurrentlua
 
 .PHONY: test
-test: deps
-	busted -o TAP
+test: 
+	-luajit -v tests/drive/cursors.lua
+	@echo "\n\n\n"
+	-luajit -v tests/drive/env.lua
+	@echo "\n\n\n"
+	-luajit -v tests/drive/int_keys.lua 
+	@echo "\n\n\n"
+	-luajit -v tests/drive/reverse_keys.lua 

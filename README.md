@@ -3,22 +3,7 @@
 lmdb-lua-ffi
 ============
 
-LuaJIT FFI based bindings for lmdb (http://symas.com/mdb/). This library is work-in-progess and is far for being stable. The interface is inspired by [py-lmdb](http://lmdb.readthedocs.org/).
-
-So far the environment and transaction implementation in almost complete. The cursors are WIP.
-
-luarocks --lua-dir=/usr/local/opt/lua@5.1 install busted
-luarocks --lua-dir=/usr/local/opt/lua@5.1 install luafilesystem
-luarocks --lua-dir=/usr/local/opt/lua@5.1 install lua_cliargs
-luarocks --lua-dir=/usr/local/opt/lua@5.1 install penlight
-luarocks --lua-dir=/usr/local/opt/lua@5.1 install lua-term
-luarocks --lua-dir=/usr/local/opt/lua@5.1 install luasystem
-luarocks --lua-dir=/usr/local/opt/lua@5.1 install mediator_lua
-luarocks --lua-dir=/usr/local/opt/lua@5.1 install lua_cliargs
-luarocks --lua-dir=/usr/local/opt/lua@5.1 install luassert
-luarocks --lua-dir=/usr/local/opt/lua@5.1 install say
-busted -v
-busted -o TAP
+使用方法： make test
 
 TODO
 废弃 busted； 改用 luaunit
@@ -36,6 +21,11 @@ Underscore.funcs.tail = Underscore.funcs.rest
 Underscore.lua, 一个Lua版本的Underscore, 函数都通用. 包含面向对象封装和链式语法. (源码)
 _ = require 'underscore' 是一个提供一组实用程序的Lua库   用于处理迭代器，数组，表和函数的函数。   这是api和文档受Underscore.lua的启发。   在Lua中使用下划线字符来丢弃变量是惯用的，所以你可以简单地将它分配给另一个变量名
 
+
+
+LuaJIT FFI based bindings for lmdb (http://symas.com/mdb/). This library is work-in-progess and is far for being stable. The interface is inspired by [py-lmdb](http://lmdb.readthedocs.org/).
+
+So far the environment and transaction implementation in almost complete. The cursors are WIP
 
 
 
