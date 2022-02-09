@@ -65,7 +65,6 @@ local function MDB_val(val, len)
     if (len and val_t == 'cdata') then
         return MDB_val_ct(len, ffi.cast('void*',val))
     end
-
     if val_t == 'cdata' and val.mv_size then
         return val
     end
@@ -339,6 +338,7 @@ function txn:put(key, value, options, db)
 
     local key = db_options.integer_keys and MDB_int_val(key) or MDB_val(key)
     local value = MDB_val(value)
+
     local rc = lmdb.mdb_put(self,db,key,value,flags)
     if rc == lmdb.MDB_KEYEXIST then
         return false
