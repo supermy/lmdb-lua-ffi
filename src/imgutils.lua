@@ -96,8 +96,8 @@ function _M:fwriteImg(imgfile,mdbVal)
     -- print(tonumber(label.mv_size),label)
     local file = ffi.C.fopen(imgfile, "wb")
     ffi.C.fwrite(mdbVal.mv_data,
-        ffi.sizeof("char"),
-        mdbVal.mv_size/ffi.sizeof("char"),
+        ffi.sizeof("uint8_t"),
+        mdbVal.mv_size/ffi.sizeof("uint8_t"),
         file);
     ffi.C.fclose(file)
 end
