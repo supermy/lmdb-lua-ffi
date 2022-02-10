@@ -28,3 +28,7 @@ test:
 	-luajit -v tests/drive/int_keys.lua 
 	@echo "\n\n\n"
 	-luajit -v tests/drive/reverse_keys.lua 
+
+.PHONY: gc
+gc: 
+	luajit tests/gc.lua 
